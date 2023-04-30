@@ -16,95 +16,97 @@ const tabs = document.querySelectorAll(".submenu__tab");
 let transitionState = 0;
 
 // 1. Creamos un arreglo con las distancias que cada tab debe recorrer para ser resaltada
-const allDistances = setDistances()
+const allDistances = setDistances();
 
 // 2. Asignamos funciones para las tabs
 for (let i = 0; i < tabs.length; i++) {
-	tabs[i].addEventListener("mouseover", () => {
-    	let distance = allDistances[i - 1] == undefined ? 0 : allDistances[i - 1];
-    	const tabWidth = parseFloat(tabs[i].getBoundingClientRect().width.toFixed(2));
-		const activeTab = tabs[i]
+  tabs[i].addEventListener("mouseover", () => {
+    let distance = allDistances[i - 1] == undefined ? 0 : allDistances[i - 1];
+    const tabWidth = parseFloat(
+      tabs[i].getBoundingClientRect().width.toFixed(2)
+    );
+    const activeTab = tabs[i];
 
-		// Recorremos y dimensionamos el highlight
-    	setHighlight(distance, tabWidth);
-		// Si lo necesitamos, preparamos el clic para la tab sobre la hacemos hover
-    	setActiveTab(activeTab);
-		// Añadimos transition
-		setTransitionState()
-  	});
+    // Recorremos y dimensionamos el highlight
+    setHighlight(distance, tabWidth);
+    // Si lo necesitamos, preparamos el clic para la tab sobre la hacemos hover
+    setActiveTab(activeTab);
+    // Añadimos transition
+    setTransitionState();
+  });
 }
 // 3. Reseteamos transitionState
 submenu.addEventListener("mouseleave", resetTransition);
 
 /**
- * 
+ *
  */
-function setTransitionState(){
-	if (transitionState == 0) {
-		highlight.style.transitionDuration = "0ms";
-		highlight.style.opacity = 1;
+function setTransitionState() {
+  if (transitionState == 0) {
+    highlight.style.transitionDuration = "0ms";
+    highlight.style.opacity = 1;
 
-		// Mientras continuemos dentro del submenu, transitionState será diferente de 0
-		// por lo que aplicaremos una transition al highlight
-		transitionState = 1;
-	  } else {
-		highlight.style.transitionDuration = "150ms";
-	  }
+    // Mientras continuemos dentro del submenu, transitionState será diferente de 0
+    // por lo que aplicaremos una transition al highlight
+    transitionState = 1;
+  } else {
+    highlight.style.transitionDuration = "150ms";
+  }
 }
 
 /**
- * 
+ *
  */
-function resetTransition(){
-	transitionState = 0;
-  	highlight.style.opacity = 0;
+function resetTransition() {
+  transitionState = 0;
+  highlight.style.opacity = 0;
 }
 
 /**
- * 
- * @returns 
+ *
+ * @returns
  */
-function setDistances(){
-	const distances = [];
-	let total = 0;
+function setDistances() {
+  const distances = [];
+  let total = 0;
 
-	for (let i = 0; i < tabs.length - 1; i++) {
-		// Recuperamos el ancho de cada tab
-		const position = tabs[i].getBoundingClientRect().width;
+  for (let i = 0; i < tabs.length - 1; i++) {
+    // Recuperamos el ancho de cada tab
+    const position = tabs[i].getBoundingClientRect().width;
 
-		// Utilizamos un acumulador para sumarlas y para almacenar cada resultado
-		// en una posición del array distances
-		total += position;
-		distances.push(parseFloat(total.toFixed(2)));
-	}
+    // Utilizamos un acumulador para sumarlas y para almacenar cada resultado
+    // en una posición del array distances
+    total += position;
+    distances.push(parseFloat(total.toFixed(2)));
+  }
 
-	return distances
+  return distances;
 }
 
 /**
- * 
- * @param {*} distance 
- * @param {*} tabActiveWidth 
+ *
+ * @param {*} distance
+ * @param {*} tabActiveWidth
  */
 function setHighlight(distance, tabActiveWidth) {
-	// Igualamos el width del highlight al de la active tab
-  	highlight.style.width = `${tabActiveWidth}px`;
-	// Recorremos la distancia que le corresponde a la active tab
-  	highlight.style.transform = `translateX(${distance}px)`;
+  // Igualamos el width del highlight al de la active tab
+  highlight.style.width = `${tabActiveWidth}px`;
+  // Recorremos la distancia que le corresponde a la active tab
+  highlight.style.transform = `translateX(${distance}px)`;
 }
 
 /**
- * 
- * @param {*} activeTab 
+ *
+ * @param {*} activeTab
  */
 function setActiveTab(activeTab) {
   activeTab.addEventListener("click", () => {
-	// Removemos la siguiente clase de todas las tabs
+    // Removemos la siguiente clase de todas las tabs
     tabs.forEach((tab) => {
       tab.classList.remove("submenu__tab--active");
     });
 
-	// Añadimos la siguiente clase a la tab sobre la que se hizo clic
+    // Añadimos la siguiente clase a la tab sobre la que se hizo clic
     activeTab.classList.add("submenu__tab--active");
   });
 }
